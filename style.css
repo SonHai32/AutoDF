@@ -1,0 +1,128 @@
+    body {
+        background-color: #353535;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .header {
+        margin-top: 70px;
+        color: #256EFF;
+        text-align: center;
+        user-select: none;
+        /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    }
+    
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-image: linear-gradient(to right, #8BD2FF, #89F4FF);
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .directory-content {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        width: 450px;
+        padding: 15px 15px;
+        height: 25px;
+    }
+    
+    .directory-content label {
+        width: 135px;
+        line-height: 25px;
+        text-align: right
+    }
+    
+    .directory-content input {
+        width: 200px;
+    }
+    
+    .directory-content button {
+        width: 65px;
+        border-radius: 15px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        background-color: #49E5A1;
+    }
+    
+    .directory-content button:hover {
+        background-color: #30996B;
+    }
+    
+    .set-time-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 15px 15px;
+        width: 450px;
+        height: 25px;
+    }
+    
+    .set-time-content label {
+        width: 135px;
+        line-height: 25px;
+        text-align: right;
+    }
+    
+    .set-time-content input {
+        width: 200px;
+    }
+    
+    .set-time-content select {
+        text-align: center;
+        width: 65px;
+        border-radius: 15px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        background-color: #49E5A1;
+    }
+    
+    .set-time-content select:hover {
+        background-color: #30996B;
+    }
+    
+    .set-time-content select option {
+        border: none;
+        outline: none;
+        background: white;
+    }
+    
+    .btn-submit {
+        border: none;
+        outline: none;
+        border-radius: 15px;
+        background-image: linear-gradient(to right, #4F997F, #49E5A1);
+        width: 20%;
+        height: 25px;
+        cursor: pointer;
+    }
+    
+    .btn-submit:hover {
+        background-image: linear-gradient(to right, #2C5446, #2C5446);
+    }
+    
+    .show-folders {
+        position: fixed;
+        top: 100%;
+        width: 100%;
+        height: 30px;
+        transform: translateY(-100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        background: #8BD2FF;
+    }
