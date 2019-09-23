@@ -5,7 +5,7 @@ const { dialog } = require("electron").remote;
 var folderAddress = document.querySelector('.folder-address');
 var btnBrowseFolder = document.querySelector(".btn_browse_folder");
 var body = document.querySelector('body')
-
+var folder = []
 
 let options = {
     // See place holder 1 in above image
@@ -24,7 +24,7 @@ let options = {
 
 //open directory
 
-let folder = []
+
 
 btnBrowseFolder.addEventListener('click', () => {
 
@@ -54,7 +54,7 @@ displayFolderName = folder => {
 
         folder.forEach(value => {
             let tag = document.createElement('span');
-            let text = document.createTextNode(value.folderName);
+            let text = document.createTextNode(value.folderName.length < 16 ? value.folderName : value.folderName.slice(0, 16) + '...');
             tag.setAttribute('class', value.folderName)
             tag.setAttribute('title', 'click to remove')
             tag.setAttribute('onclick', 'removeFolder(event)')
