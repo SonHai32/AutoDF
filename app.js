@@ -110,38 +110,55 @@ let time = (time, timeType) => {
             break;
     }
 }
+
+let deleteFileWithTime
 btnStart.addEventListener('click', () => {
     let folderPathDeleted = []
     if (folder.length > 0) {
 
         if (setTime.value > 0) {
-            deleteFileWithTime = setInterval(() => {
-                folder.forEach(val => {
-                    if (val.files.length > 0) {
-                        val.files.forEach(files => {
-                            files.forEach(file => {
-                                fs.unlink(`${val.folderPath}${'\\'}${file}`, err => {
-                                    if (err) {
-                                        console.log(err);
-                                    }
+
+            if (btnStart.value == 'start') {
+                btnStart.innerHTML = 'starting'
+                btnStart.setAttribute('value', 'starting')
+                deleteFileWithTime = setInterval(() => {
+                    folder.forEach(val => {
+                        if (val.files.length > 0) {
+                            val.files.forEach(files => {
+                                files.forEach(file => {
+                                    fs.unlink(`${val.folderPath}${'\\'}${file}`, err => {
+                                        if (err) {
+                                            console.log(err);
+                                        }
+                                    })
+
                                 })
-
                             })
-                        })
+
+                        }
                         folderPathDeleted.push(val.folderPath)
-                    }
+                    });
                     folder = []
-
-                });
-
-                setTimeout(() => {
                     folderPathDeleted.forEach(folderPath => {
                         this.setFolder(folderPath)
                     });
-                    folderPathDeleted = []
-                }, (time(setTime.value, selectTime.value) * 1000) - 1000)
 
-            }, time(setTime.value, selectTime.value) * 1000)
+                    setTimeout(() => {
+                        folder = [];
+                        folderPathDeleted.forEach(folderPath => {
+                            this.setFolder(folderPath)
+                        });
+                        folderPathDeleted = []
+                    }, (time(setTime.value, selectTime.value) * 1000) - 1000)
+
+                }, time(setTime.value, selectTime.value) * 1000)
+            } else {
+                clearInterval(deleteFileWithTime);
+                btnStart.innerHTML = 'start'
+                btnStart.setAttribute('value', 'start')
+                console.log("stop");
+            }
+
         } else {
             dialog.showErrorBox('ERROR', 'TIME ERROR')
         }
