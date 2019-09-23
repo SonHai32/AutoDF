@@ -4,6 +4,7 @@ const { dialog } = require("electron").remote;
 
 var folderAddress = document.querySelector('.folder-address');
 var btnBrowseFolder = document.querySelector(".btn_browse_folder");
+var btnStart = document.querySelector('.btn-start')
 var body = document.querySelector('body')
 var folder = []
 
@@ -84,3 +85,22 @@ getFileFromPath = filePath => {
     })
     return files
 }
+
+btnStart.addEventListener('click', () => {
+    if (folder.length > 0) {
+        folder.forEach(val => {
+            if (val.files.length > 0) {
+                val.files.forEach(files => {
+                    files.forEach(file => {
+                        fs.unlink(`${val.folderPath}${'\\'}${file}`, err => {
+                            dialog.showErrorBox('ERROR', err)
+                        })
+                    })
+                })
+            }
+
+        })
+    } else {
+        dialog.showErrorBox('ERROR', 'NO FOLDERS WAS CHOOSEN')
+    }
+})

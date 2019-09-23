@@ -100,7 +100,7 @@
         background: white;
     }
     
-    .btn-submit {
+    .btn-start {
         border: none;
         outline: none;
         border-radius: 15px;
@@ -110,7 +110,7 @@
         cursor: pointer;
     }
     
-    .btn-submit:hover {
+    .btn-start:hover {
         background-image: linear-gradient(to right, #2C5446, #2C5446);
     }
     
