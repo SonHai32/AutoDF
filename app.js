@@ -4,6 +4,9 @@ const { dialog } = require("electron").remote;
 
 var folderAddress = document.querySelector('.folder-address');
 var btnBrowseFolder = document.querySelector(".btn_browse_folder");
+var setTime = document.getElementById('set-time');
+var selectTime = document.getElementById('select-time')
+
 var btnStart = document.querySelector('.btn-start')
 var body = document.querySelector('body')
 var folder = []
@@ -33,17 +36,21 @@ btnBrowseFolder.addEventListener('click', () => {
         dialog.showOpenDialog(options).then(result => {
             if (result.filePaths[0] != undefined) {
                 folderAddress.setAttribute('value', result.filePaths[0])
-                folder.push({ folderPath: result.filePaths[0], folderName: path.basename(result.filePaths[0]), files: this.getFileFromPath(result.filePaths[0]) })
+                this.setFolder(result.filePaths[0])
                 this.displayFolderName(folder)
             }
 
-        }).catch(err => dialog.showErrorBox('ERROR', err))
+        }).catch(err => console.log(err))
     } else {
         dialog.showErrorBox("ERROR", "Maximum 5 folder")
     }
 
 });
 
+setFolder = filePath => {
+    folder.push({ folderPath: filePath, folderName: path.basename(filePath), files: this.getFileFromPath(filePath) })
+
+}
 
 displayFolderName = folder => {
 
@@ -86,20 +93,61 @@ getFileFromPath = filePath => {
     return files
 }
 
-btnStart.addEventListener('click', () => {
-    if (folder.length > 0) {
-        folder.forEach(val => {
-            if (val.files.length > 0) {
-                val.files.forEach(files => {
-                    files.forEach(file => {
-                        fs.unlink(`${val.folderPath}${'\\'}${file}`, err => {
-                            dialog.showErrorBox('ERROR', err)
-                        })
-                    })
-                })
-            }
 
-        })
+let time = (time, timeType) => {
+    switch (timeType) {
+        case 'minute':
+            return time * 60;
+            break;
+        case 'hour':
+            return time * 3600;
+            break;
+        case 'day':
+            return 24 * 3600;
+            break;
+        case 'month':
+            return 30 * 24 * 3600
+            break;
+    }
+}
+btnStart.addEventListener('click', () => {
+    let folderPathDeleted = []
+    if (folder.length > 0) {
+
+        if (setTime.value > 0) {
+            deleteFileWithTime = setInterval(() => {
+                folder.forEach(val => {
+                    if (val.files.length > 0) {
+                        val.files.forEach(files => {
+                            files.forEach(file => {
+                                fs.unlink(`${val.folderPath}${'\\'}${file}`, err => {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                })
+
+                            })
+                        })
+                        folderPathDeleted.push(val.folderPath)
+                    }
+                    folder = []
+
+                });
+
+                setTimeout(() => {
+                    folderPathDeleted.forEach(folderPath => {
+                        this.setFolder(folderPath)
+                    });
+                    folderPathDeleted = []
+                }, (time(setTime.value, selectTime.value) * 1000) - 1000)
+
+            }, time(setTime.value, selectTime.value) * 1000)
+        } else {
+            dialog.showErrorBox('ERROR', 'TIME ERROR')
+        }
+
+
+
     } else {
         dialog.showErrorBox('ERROR', 'NO FOLDERS WAS CHOOSEN')
     }
