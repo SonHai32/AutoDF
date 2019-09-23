@@ -134,8 +134,10 @@ btnStart.addEventListener('click', () => {
         if (setTime.value > 0) {
 
             if (btnStart.value == 'start') {
-                btnStart.innerHTML = 'starting'
-                btnStart.setAttribute('value', 'starting')
+                btnStart.innerHTML = 'stop'
+                btnStart.setAttribute('value', 'stop')
+                this.disabledElement()
+
                 deleteFileWithTime = setInterval(() => {
                     folder.forEach(val => {
                         if (val.files.length > 0) {
@@ -171,7 +173,7 @@ btnStart.addEventListener('click', () => {
                 clearInterval(deleteFileWithTime);
                 btnStart.innerHTML = 'start'
                 btnStart.setAttribute('value', 'start')
-                console.log("stop");
+                this.activeElement();
             }
 
         } else {
@@ -184,3 +186,18 @@ btnStart.addEventListener('click', () => {
         dialog.showErrorBox('ERROR', 'NO FOLDERS WAS CHOOSEN')
     }
 })
+
+
+disabledElement = () => {
+    document.getElementById('folder-address').disabled = 'true'
+    document.getElementById('btn_browse_folder').disabled = 'true'
+    document.getElementById('set-time').disabled = 'true'
+    document.getElementById('select-time').disabled = 'true'
+}
+
+activeElement = () => {
+    document.getElementById('folder-address').removeAttribute('disabled')
+    document.getElementById('btn_browse_folder').removeAttribute('disabled')
+    document.getElementById('set-time').removeAttribute('disabled')
+    document.getElementById('select-time').removeAttribute('disabled')
+}
