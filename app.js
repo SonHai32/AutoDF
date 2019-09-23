@@ -35,9 +35,24 @@ btnBrowseFolder.addEventListener('click', () => {
     if (folder.length <= 4) {
         dialog.showOpenDialog(options).then(result => {
             if (result.filePaths[0] != undefined) {
-                folderAddress.setAttribute('value', result.filePaths[0])
-                this.setFolder(result.filePaths[0])
-                this.displayFolderName(folder)
+                if (folder.length > 0) {
+
+                    if (folder.some((val, i, arr) => {
+                            return val.folderPath == result.filePaths[0]
+                        })) {
+                        dialog.showErrorBox('ERROR', 'FOLDER HAS BEEN CHOOSEN')
+                    } else {
+                        folderAddress.setAttribute('value', result.filePaths[0])
+                        this.setFolder(result.filePaths[0])
+                        this.displayFolderName(folder)
+                    }
+                } else {
+                    folderAddress.setAttribute('value', result.filePaths[0])
+                    this.setFolder(result.filePaths[0])
+                    this.displayFolderName(folder)
+                }
+
+
             }
 
         }).catch(err => console.log(err))
