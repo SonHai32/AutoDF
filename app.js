@@ -61,12 +61,17 @@ displayFolderName = folder => {
             tag.appendChild(text)
             div.appendChild(tag)
         })
+
         body.appendChild(div)
     }
 }
 
 removeFolder = event => {
-    console.log(event.target.className);
+
+    folder = folder.filter((val, index, arr) => {
+        return val.folderName != event.target.className;
+    })
+    this.displayFolderName(folder)
 }
 
 getFileFromPath = filePath => {
