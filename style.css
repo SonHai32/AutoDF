@@ -136,3 +136,12 @@
         border-radius: 15px;
         cursor: pointer;
     }
+    
+    .author-name {
+        width: 100px;
+        position: fixed;
+        color: white;
+        top: 95%;
+        left: 90%;
+        transform: translate(-95%, -90%)
+    }

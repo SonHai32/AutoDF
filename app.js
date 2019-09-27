@@ -63,7 +63,7 @@ btnBrowseFolder.addEventListener('click', () => {
 });
 
 setFolder = filePath => {
-    folder.push({ folderPath: filePath, folderName: path.basename(filePath), files: this.getFileFromPath(filePath) })
+    folder.push({ folderPath: filePath, folderName: path.basename(filePath) })
 
 }
 
@@ -97,38 +97,50 @@ removeFolder = event => {
     this.displayFolderName(folder)
 }
 
-getFileFromPath = filePath => {
-    let files = [];
+getFileFromPath = folderPath => {
+
+    let filePath = []
 
 
-    fs.readdir(filePath, (err, file) => {
-        files.push(file)
+    fs.readdir(folderPath, (err, files) => {
+        files.forEach(file => {
+            filePath.push(`${folderPath}${'\\'}${file}`)
+        })
+    });
 
-    })
-    return files
+    return filePath;
+
 }
 
 
 let time = (time, timeType) => {
-    switch (timeType) {
-        case 'minute':
-            return time * 60;
-            break;
-        case 'hour':
-            return time * 3600;
-            break;
-        case 'day':
-            return 24 * 3600;
-            break;
-        case 'month':
-            return 30 * 24 * 3600
-            break;
+        switch (timeType) {
+            case 'minute':
+                return time * 60;
+                break;
+            case 'hour':
+                return time * 3600;
+                break;
+            case 'day':
+                return 24 * 3600;
+                break;
+            case 'month':
+                return 30 * 24 * 3600
+                break;
+        }
     }
+    ///////////////////////
+deleteFile = allFile => {
+
+    allFile.forEach(file => {
+        files.concat(file)
+    })
+
 }
 
 let deleteFileWithTime
 btnStart.addEventListener('click', () => {
-    let folderPathDeleted = []
+
     if (folder.length > 0) {
 
         if (setTime.value > 0) {
@@ -139,36 +151,15 @@ btnStart.addEventListener('click', () => {
                 this.disabledElement()
 
                 deleteFileWithTime = setInterval(() => {
+
+                    let allFile = []
                     folder.forEach(val => {
-                        if (val.files.length > 0) {
-                            val.files.forEach(files => {
-                                files.forEach(file => {
-                                    fs.unlink(`${val.folderPath}${'\\'}${file}`, err => {
-                                        if (err) {
-                                            console.log(err);
-                                        }
-                                    })
 
-                                })
-                            })
+                        allFile.push(getFileFromPath(val.folderPath))
+                    })
+                    deleteFile(allFile)
 
-                        }
-                        folderPathDeleted.push(val.folderPath)
-                    });
-                    folder = []
-                    folderPathDeleted.forEach(folderPath => {
-                        this.setFolder(folderPath)
-                    });
-
-                    setTimeout(() => {
-                        folder = [];
-                        folderPathDeleted.forEach(folderPath => {
-                            this.setFolder(folderPath)
-                        });
-                        folderPathDeleted = []
-                    }, (time(setTime.value, selectTime.value) * 1000) - 1000)
-
-                }, time(setTime.value, selectTime.value) * 1000)
+                }, (time(setTime.value, selectTime.value) * 1000))
             } else {
                 clearInterval(deleteFileWithTime);
                 btnStart.innerHTML = 'start'
