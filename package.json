@@ -1,6 +1,6 @@
 {
     "name": "AutoDF",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "description": "A minimal Electron application",
     "main": "main.js",
     "scripts": {
@@ -21,6 +21,7 @@
         "electron-packager": "^14.0.6"
     },
     "dependencies": {
-        "jsdom": "^15.1.1"
+        "jsdom": "^15.1.1",
+        "moment": "^2.24.0"
     }
 }

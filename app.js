@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path")
 const { dialog } = require("electron").remote;
+const moment = require('moment')
 
 var folderAddress = document.querySelector('.folder-address');
 var btnBrowseFolder = document.querySelector(".btn_browse_folder");
@@ -11,6 +12,8 @@ var btnStart = document.querySelector('.btn-start')
 var body = document.querySelector('body')
 var folder = []
 
+
+let pathSlash = ''
 let options = {
     // See place holder 1 in above image
     title: "Choose folder has file you want to delete",
@@ -26,9 +29,13 @@ let options = {
     properties: ['openDirectory']
 }
 
-//open directory
 
-
+if (navigator.appVersion.indexOf('Win') != -1) {
+    pathSlash = '\\'
+}
+if (navigator.appVersion.indexOf('Linux') != -1) {
+    pathSlash = '/'
+}
 
 btnBrowseFolder.addEventListener('click', () => {
 
@@ -64,7 +71,7 @@ btnBrowseFolder.addEventListener('click', () => {
 
 setFolder = filePath => {
     folder.push({ folderPath: filePath, folderName: path.basename(filePath) })
-
+    getFileFromPath(filePath)
 }
 
 displayFolderName = folder => {
@@ -89,52 +96,73 @@ displayFolderName = folder => {
     }
 }
 
+let allFile = []
+
 removeFolder = event => {
 
     folder = folder.filter((val, index, arr) => {
+
         return val.folderName != event.target.className;
     })
     this.displayFolderName(folder)
+    allFile = []
+    if (folder.length > 0) {
+        folder.forEach(val => {
+            getFileFromPath(val.folderPath)
+        })
+    }
+
 }
 
 getFileFromPath = folderPath => {
 
-    let filePath = []
-
-
     fs.readdir(folderPath, (err, files) => {
+        let a;
+
         files.forEach(file => {
-            filePath.push(`${folderPath}${'\\'}${file}`)
+            fs.stat(`${folderPath}${pathSlash}${file}`, (err, stats) => {
+                allFile.push(`${folderPath}${pathSlash}${file}`);
+                // if (moment(stats.birthtimeMs).fromNow().includes('days')) {
+                //     allFile.push(`${folderPath}${pathSlash}${file}`);
+                // }
+            })
         })
     });
-
-    return filePath;
 
 }
 
 
 let time = (time, timeType) => {
-        switch (timeType) {
-            case 'minute':
-                return time * 60;
-                break;
-            case 'hour':
-                return time * 3600;
-                break;
-            case 'day':
-                return 24 * 3600;
-                break;
-            case 'month':
-                return 30 * 24 * 3600
-                break;
-        }
+    switch (timeType) {
+        case 'minute':
+            return time * 60;
+            break;
+        case 'hour':
+            return time * 3600;
+            break;
+        case 'day':
+            return 24 * 3600;
+            break;
+        case 'month':
+            return 30 * 24 * 3600
+            break;
     }
-    ///////////////////////
+}
 deleteFile = allFile => {
+    if (allFile.length > 0) {
+        allFile.forEach(file => {
+            fs.exists(file, exists => {
+                if (exists) {
+                    fs.unlink(file, err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    })
+                }
+            })
+        })
 
-    allFile.forEach(file => {
-        files.concat(file)
-    })
+    }
 
 }
 
@@ -151,13 +179,14 @@ btnStart.addEventListener('click', () => {
                 this.disabledElement()
 
                 deleteFileWithTime = setInterval(() => {
-
-                    let allFile = []
                     folder.forEach(val => {
 
-                        allFile.push(getFileFromPath(val.folderPath))
+                        getFileFromPath(val.folderPath)
                     })
-                    deleteFile(allFile)
+
+                    deleteFile(allFile);
+                    allFile = [];
+
 
                 }, (time(setTime.value, selectTime.value) * 1000))
             } else {
